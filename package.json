@@ -1,0 +1,8 @@
+{
+  "name": "aws-payment-api",
+  "version": "1.0.0",
+  "description": "Handles Billplz payment processing for MyGovHub.",
+  "devDependencies": {
+    "serverless-python-requirements": "^6.1.0"
+  }
+}

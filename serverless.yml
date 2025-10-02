@@ -1,0 +1,44 @@
+service: aws-payment-api
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: python3.10
+  region: ${opt:region, "us-east-1"}
+  stage: ${opt:stage, 'dev'}
+  timeout: 29
+  memorySize: 256 # Payment service can be leaner
+
+  environment:
+    BILLPLZ_API_KEY: ${env:BILLPLZ_API_KEY}
+    BILLPLZ_COLLECTION_ID: ${env:BILLPLZ_COLLECTION_ID}
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "logs:CreateLogGroup"
+            - "logs:CreateLogStream"
+            - "logs:PutLogEvents"
+          Resource: "arn:aws:logs:*:*:*"
+
+functions:
+  createBill:
+    handler: payment_handler.create_bill
+    events:
+      - http:
+          path: payment/create-bill
+          method: post
+          cors: true
+
+  paymentWebhook:
+    handler: payment_handler.handle_webhook
+    events:
+      - http:
+          path: payment/webhook
+          method: post
+
+plugins:
+  - serverless-python-requirements
