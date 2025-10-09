@@ -14,15 +14,16 @@ REDIRECT_URL = os.environ.get("REDIRECT_URL")
 # Billplz API endpoint
 BILLPLZ_API_URL = "https://www.billplz-sandbox.com/api/v3/bills"
 
-# Temporary Testing API
-FRONTEND_BILLPLZ_COLLECTION_ID_TESTING = os.environ.get("BILLPLZ_COLLECTION_ID_TESTING")
-FRONTEND_BILLPLZ_API_KEY_TESTING = os.environ.get("BILLPLZ_API_KEY_TESTING")
-BILLPLZ_X_SIGNATURE_KEY = os.environ.get("BILLPLZ_X_SIGNATURE_KEY")
-
 # MongoDB MCP endpoint
 MONGODB_MCP_URL = os.environ.get("MONGODB_MCP_URL")
 DB_NAME = os.environ.get("DB_NAME")
 COLLECTION_NAME = os.environ.get("COLLECTION_NAME")
+
+# Billplz Configuration
+JPJ_COLLECTION_ID = os.environ.get("JPJ_COLLECTION_ID")
+TNB_COLLECTION_ID = os.environ.get("TNB_COLLECTION_ID")
+JPJ_BILLPLZ_X_SIGNATURE_KEY = os.environ.get("JPJ_BILLPLZ_X_SIGNATURE_KEY")
+TNB_BILLPLZ_X_SIGNATURE_KEY = os.environ.get("TNB_BILLPLZ_X_SIGNATURE_KEY")
 
 # --- Database Connection ---
 # We initialize the client outside the handlers to reuse the connection across invocations
@@ -180,9 +181,11 @@ def verify_signature(data, signature):
             'paid_amount', 'paid_at', 'paid', 'state', 'url']
     
     to_sign_string = "|".join([f"{k}{data.get(k, '')}" for k in keys])
+
+    service_signature = JPJ_BILLPLZ_X_SIGNATURE_KEY if data.get('collection_id') == os.environ.get('JPJ_COLLECTION_ID') else TNB_BILLPLZ_X_SIGNATURE_KEY
     
     hashed = hmac.new(
-        BILLPLZ_X_SIGNATURE_KEY.encode('utf-8'),
+        service_signature.encode('utf-8'),
         to_sign_string.encode('utf-8'),
         hashlib.sha256
     ).hexdigest()
