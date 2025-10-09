@@ -58,12 +58,13 @@ def create_bill(event, context):
         user_id = body.get('user_id')
         service_type = body.get('service_type')
         description = body.get('description')
-        amount_in_cents = int(body.get('amount_in_cents'))
+        amount = float(body.get('amount'))  # In MYR
+        amount_in_cents = int(amount * 100)  # Convert to cents
         email = body.get('email')
         name = body.get('name')
         metadata = body.get('metadata', {})
 
-        if not all([api_key, collection_id, callback_url, redirect_url, user_id, amount_in_cents]):
+        if not all([api_key, collection_id, callback_url, redirect_url, user_id, amount]):
             return {"statusCode": 400, "body": json.dumps({"error": "Missing required parameters."})}
 
         # 1. --- Create the initial transaction document ---
@@ -74,7 +75,7 @@ def create_bill(event, context):
             "userId": user_id,
             "serviceType": service_type,
             "description": description,
-            "amount": amount_in_cents,
+            "amount": amount,
             "currency": "MYR",
             "status": "pending",
             "createdAt": datetime.datetime.utcnow().isoformat() + "Z",
