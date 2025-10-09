@@ -2,6 +2,8 @@
 
 Serverless payment service for MyGovHub that integrates with Billplz payment gateway and MongoDB for transaction management.
 
+© 2025 Goodbye World team, for Great AI Hackathon Malaysia 2025 usage.
+
 ## API Endpoints
 
 ### Create Payment Bill
