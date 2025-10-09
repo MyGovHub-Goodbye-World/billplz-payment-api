@@ -11,12 +11,12 @@ provider:
   memorySize: 256 # Payment service can be leaner
 
   environment:
-    BILLPLZ_TNB_API_KEY: ${env:BILLPLZ_TNB_API_KEY}
-    BILLPLZ_JPJ_API_KEY: ${env:BILLPLZ_JPJ_API_KEY}
+    BILLPLZ_X_SIGNATURE_KEY: ${env:BILLPLZ_X_SIGNATURE_KEY}
     CALLBACK_URL: ${env:CALLBACK_URL}
     REDIRECT_URL: ${env:REDIRECT_URL}
-    BILLPLZ_COLLECTION_ID_TESTING: ${env:BILLPLZ_COLLECTION_ID_TESTING}
-    BILLPLZ_API_KEY_TESTING: ${env:BILLPLZ_API_KEY_TESTING}
+    MONGODB_MCP_URL: ${env:MONGODB_MCP_URL}
+    DB_NAME: ${env:DB_NAME}
+    COLLECTION_NAME: ${env:COLLECTION_NAME}
 
   iam:
     role:
@@ -45,4 +45,5 @@ functions:
           method: post
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-python-requirements
