@@ -8,6 +8,7 @@ import logging
 import uuid
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+from decimal import Decimal, ROUND_HALF_UP
 
 # Secrets will now come directly from environment variables
 CALLBACK_URL = os.environ.get("CALLBACK_URL")
@@ -94,8 +95,8 @@ def create_bill(event, context):
         user_id = body.get('user_id')
         service_type = body.get('service_type')
         description = body.get('description')
-        amount = float(body.get('amount'))  # In MYR
-        amount_in_cents = int(amount * 100)  # Convert to cents
+        amount = Decimal(str(body.get('amount'))) # In MYR
+        amount_in_cents = int((amount * 100).to_integral_value(rounding=ROUND_HALF_UP)) # Convert to cents
         email = body.get('email')
         name = body.get('name')
         metadata = body.get('metadata', {})
@@ -114,7 +115,7 @@ def create_bill(event, context):
             "userId": user_id,
             "serviceType": service_type,
             "description": description,
-            "amount": amount,
+            "amount": float(amount),
             "currency": "MYR",
             "status": "pending",
             "createdAt": timestamp,
