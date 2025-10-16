@@ -14,7 +14,7 @@ Creates a transaction in MongoDB and generates a Billplz payment URL.
 **Request:**
 ```json
 {
-    "user_id": "040218-07-0711",
+    "user_id": "010203-04-0506",
     "service_type": "frontend-test",
     "description": "attempt 2",
     "amount": 50.00,
